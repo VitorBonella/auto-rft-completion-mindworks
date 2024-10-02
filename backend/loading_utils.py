@@ -1,8 +1,12 @@
 import os
+import re
 import requests
 import streamlit as st
 from time import sleep
 import random
+
+import urllib.parse
+
 from backend import gpt
 import pandas as pd
 
@@ -12,8 +16,15 @@ def download_pdf(url, download_folder="downloads"):
     if not os.path.exists(download_folder):
         os.makedirs(download_folder)
 
-    # Nome do arquivo baseado no link
-    file_name = os.path.join(download_folder, url.split("/")[-1])
+    # Nome do arquivo baseado no link mas com formatação adequada...
+    temp = urllib.parse.unquote(url)
+    #temp = url
+    file_name = os.path.join(download_folder, temp.split("/")[-1])
+    match = re.search(r"\.pdf", file_name)
+    if match:
+        # Corta a string até a posição logo após o .pdf se achar
+        file_name = file_name[:match.end()]
+    
 
     # Verifica se o arquivo já foi baixado ou se já falhou anteriormente
     if os.path.isfile(file_name):

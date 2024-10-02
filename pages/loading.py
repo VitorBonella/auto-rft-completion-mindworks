@@ -43,9 +43,9 @@ if (
     if "Equipment" not in base.columns:
         if "Equipamento" in base.columns:
             base.rename(columns={"Equipamento": "Equipment"}, inplace=True)
-            st.write(
-                "Assumindo erro humano e renomeando coluna 'Equipamento' para 'Equipment'"
-            )
+            # st.write(
+            #     "Assumindo erro humano e renomeando coluna 'Equipamento' para 'Equipment'"
+            # )
         else:
             erros = erros + "Erro: Coluna 'Equipment' não encontrada no arquivo CSV.\n"
 
