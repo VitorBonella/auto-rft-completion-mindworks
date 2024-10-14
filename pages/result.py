@@ -2,24 +2,24 @@ import streamlit as st
 import pandas as pd
 
 
-@st.dialog("Deseja retornar para a página principal?")
+@st.dialog("Do you want to return to the main page?")
 def voltar_para_pagina_principal():
     st.warning(
-        "Se você voltar para a página principal, seu progresso e resultado será perdido."
+        "If you go back to the main page, your progress and results will be lost."
     )
-    if st.button("Confirmar"):
+    if st.button("Confirm"):
         st.switch_page("pages/home.py")
 
 
-st.title("Resultado da Consulta")
+st.title("Query Result")
 df = st.session_state.dfFinal
-st.write("Primeiras linhas do arquivo CSV:")
+st.write("First lines of the resulting file:")
 st.dataframe(df)
 
 uploaded_file_Final = df.to_excel("Resultados.xlsx", index=False)
 
 st.download_button(
-    label="Baixar Arquivo",
+    label="Download file",
     data=open("Resultados.xlsx", "rb"),
     file_name="Resultados.xlsx",
     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -29,5 +29,5 @@ if "links_falhos" in st.session_state and st.session_state.links_falhos is not N
     links_falhos = st.session_state.links_falhos
     st.write(links_falhos)
 
-if st.button("Voltar para página principal"):
+if st.button("Return to main page"):
     voltar_para_pagina_principal()

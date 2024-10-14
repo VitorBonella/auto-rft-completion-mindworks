@@ -15,9 +15,9 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.title("Estamos processando os arquivos, aguarde")
+st.title("We are processing the files, please wait")
 
-if st.button("Se der errado clique aqui"):
+if st.button("If something goes wrong and you want to return, click here"):
     # Volta pra pagina inicial
     st.switch_page("pages/home.py")
 
@@ -28,7 +28,7 @@ if (
     and st.session_state.df_rfp is not None
 ):
     # Exibe o arquivo carregado
-    st.write("Carregando...")
+    st.write("Loading...")
     erros = ""
     base = st.session_state.df
     rfp = st.session_state.df_rfp
@@ -47,10 +47,10 @@ if (
             #     "Assumindo erro humano e renomeando coluna 'Equipamento' para 'Equipment'"
             # )
         else:
-            erros = erros + "Erro: Coluna 'Equipment' não encontrada no arquivo CSV.\n"
+            erros = erros + "Error: 'Equipment' Column not found on CSV file.\n"
 
     if "Link" not in base.columns:
-        erros = erros + "Erro: Coluna 'Link' não encontrada no arquivo CSV.\n"
+        erros = erros + "Error: 'Link' Column not found on CSV file.\n"
 
     if erros:
         st.session_state.erros = erros
@@ -71,12 +71,12 @@ if (
     for i in linkErrado.values:
         if flag:
             flag = False
-            links_falhos = "Equipamentos cujo link não funcionou:\n\n"
+            links_falhos = "Equipment whose link does not work:\n\n"
         links_falhos = links_falhos + i[0] + " - " + i[1] + "\n\n"
 
     # Verifica se as colunas necessárias existem
     if "Requisito" not in rfp.columns:
-        erros = erros + "Erro: Coluna 'Requisito' não encontrada no arquivo CSV.\n"
+        erros = erros + "Error: 'Requisito' Column not found on CSV file.\n"
 
     if "Comprovação" in rfp.columns:
         rfp = rfp.drop(columns=["Comprovação"])
