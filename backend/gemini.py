@@ -82,13 +82,14 @@ def search_requirement(rfp, base):
     for questao in rfp["Requisito"]:
         questoes += "$$$ " + questao + "\n"
 
-    arquivos = base["Local"].unique()[0:2]
+
+    arquivos = base["Local"].unique()
+
 
     saidas = []
     # total_arquivos = len(arquivos)
     # qtd = 1 / arquivos.size
     
-
     for idx, arq in enumerate(arquivos):
         file = upload_to_gemini(arq, mime_type="application/pdf")
         wait_for_files_active([file])
@@ -104,7 +105,8 @@ def search_requirement(rfp, base):
         id1 = "_" + str(random.randint(0, 100000000))
         id2 = "_" + str(random.randint(0, 100000000))
         rfp = rfp.merge(output, on="Requisito", how="left", suffixes=(id1, id2))
-        time.sleep(5)
+        if idx%2 == 0:
+            time.sleep(60)
         
     rfp = ajustar_cores(rfp)
     escondidos = []
