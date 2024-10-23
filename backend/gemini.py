@@ -103,7 +103,7 @@ def search_requirement(rfp, base):
         id1 = "_" + str(random.randint(0, 100000000))
         id2 = "_" + str(random.randint(0, 100000000))
         rfp = rfp.merge(output, on="Item", how="left", suffixes=(id1, id2))
-        if (idx%2 ==0): 
+        if ((idx+1)%2 ==0): 
             print("Sleeping for 60 seconds - API key limit")
             time.sleep(60)
 
