@@ -117,7 +117,6 @@ def search_requirement(rfp, base):
     style = style.hide(subset=escondidos, axis=1)
 
     return rfp, style
- Free Trial with $300 in credit. D
 
 def format_output(content):
 

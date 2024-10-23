@@ -55,4 +55,11 @@ urllib3==2.2.3
 watchdog==4.0.2
 streamlit_custom_notification_box==0.1.2
 openpyxl==3.1.2
+google-ai-generativelanguage==0.6.10
+google-api-core==2.21.0
+google-api-python-client==2.149.0
+google-auth==2.35.0
+google-auth-httplib2==0.2.0
+google-generativeai==0.8.3
+googleapis-common-protos==1.65.0
 # dotenv  # Tirar o comentario, vai depender de qual docker image a gnt vai se basear
