@@ -110,8 +110,8 @@ def search_requirement(rfp, base):
         st.write(arq + "      ", "Completed")
 
         if ((idx+1)%2 ==0): 
-            print("Sleeping for 60 seconds - API key limit")
-            time.sleep(60)
+            print("Sleeping for 90 seconds - API key limit")
+            time.sleep(90)
 
     rfp = ajustar_cores(rfp)
     escondidos = []
