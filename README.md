@@ -24,6 +24,9 @@ The -p flag publishes the container's port 8501 to your server’s 8501 port, an
 You can now access the app in your browser simply using `http://0.0.0.0:8501` or `http://localhost:8501`, the address may vary if you're acessing it from another machine.
 In this case, ask for yout IT manager to inform you the IP/Address you should access it from.
 
+## How to get a gemini api key
+
+Access https://aistudio.google.com/app/apikey?hl=pt-br , and create your api key.
 
 # Running the application without docker
 This path is not recommended, however, it can be a good debugging step and something the following developers of this aplication should use
