@@ -10,6 +10,7 @@ import random
 import time
 import google.generativeai as genai
 import pandas as pd
+import streamlit as st
 
 
 def upload_to_gemini(path, mime_type=None):
@@ -87,9 +88,10 @@ def search_requirement(rfp, base):
     arquivos = base["Local"].unique()
 
     saidas = []
-    # total_arquivos = len(arquivos)
-    # qtd = 1 / arquivos.size
-    
+    total_arquivos = len(arquivos)
+    qtd = 1 / arquivos.size
+
+    progress_bar = st.progress(0, "0" + "/" + str(total_arquivos))
 
     for idx, arq in enumerate(arquivos):
         file = upload_to_gemini(arq, mime_type="application/pdf")
@@ -103,6 +105,10 @@ def search_requirement(rfp, base):
         id1 = "_" + str(random.randint(0, 100000000))
         id2 = "_" + str(random.randint(0, 100000000))
         rfp = rfp.merge(output, on="Item", how="left", suffixes=(id1, id2))
+        
+        progress_bar.progress((idx + 1) * qtd, str(idx+1) + "/" + str(total_arquivos))
+        st.write(arq + "      ", "Completed")
+
         if ((idx+1)%2 ==0): 
             print("Sleeping for 60 seconds - API key limit")
             time.sleep(60)
