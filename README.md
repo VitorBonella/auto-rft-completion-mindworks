@@ -29,7 +29,7 @@ In this case, ask for yout IT manager to inform you the IP/Address you should ac
 This path is not recommended, however, it can be a good debugging step and something the following developers of this aplication should use
 ## Install dependencies
 In the cloned directory, run the following command
-`pip install -r`
+`pip install -r requirements.txt`
 
 ## Start application
 To simply start the application you could get it running with the command below

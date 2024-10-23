@@ -3,6 +3,7 @@ import pandas as pd
 from time import sleep
 import pandas as pd
 import backend.loading_utils as lu
+import backend.gemini as ge
 
 st.markdown(
     """
@@ -89,7 +90,7 @@ if (
         st.session_state.links_falhos = links_falhos
         st.switch_page("pages/error.py")
 
-    new_info, new_info_colour = lu.search_requirement(rfp, base)
+    new_info, new_info_colour = ge.search_requirement(rfp, base)
 
     dfFinal = new_info_colour
 

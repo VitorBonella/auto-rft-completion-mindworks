@@ -11,7 +11,6 @@ import time
 import google.generativeai as genai
 import pandas as pd
 
-genai.configure(api_key="COLOCA A TUA CHAVE AQ")
 
 def upload_to_gemini(path, mime_type=None):
   file = genai.upload_file(path, mime_type=mime_type)
@@ -77,19 +76,20 @@ def create_model():
 
 
 def search_requirement(rfp, base):
+    genai.configure(api_key=os.getenv('API_KEY'))
+
     questoes = ""
 
     for questao in rfp["Requisito"]:
         questoes += "$$$ " + questao + "\n"
 
-
-    arquivos = base["Local"].unique()
-
+    arquivos = base["Local"].unique()[0:2]
 
     saidas = []
     # total_arquivos = len(arquivos)
     # qtd = 1 / arquivos.size
     
+
     for idx, arq in enumerate(arquivos):
         file = upload_to_gemini(arq, mime_type="application/pdf")
         wait_for_files_active([file])
@@ -104,19 +104,21 @@ def search_requirement(rfp, base):
         print(output)
         id1 = "_" + str(random.randint(0, 100000000))
         id2 = "_" + str(random.randint(0, 100000000))
-        rfp = rfp.merge(output, on="Requisito", how="left", suffixes=(id1, id2))
-        if idx%2 == 0:
-            time.sleep(60)
-        
+        rfp = rfp.merge(output, on="Item", how="left", suffixes=(id1, id2))
+        time.sleep(5)
+
+    print(rfp)        
     rfp = ajustar_cores(rfp)
     escondidos = []
     for col in rfp.columns:
         if col.startswith('Cor_'):
             escondidos.append(col)
     
+    print(rfp)
     style = rfp.style.apply(aplicar_cor, axis=None)
     style = style.hide(subset=escondidos, axis=1)
 
+    print(style)
     return rfp, style
 
 
@@ -145,10 +147,17 @@ def format_output(content):
         }
     )
 
-    response["Requisito"] = response["Requisito"].str.replace("?", "")
+    # response["Requisito"] = response["Requisito"].str.replace("?", "")
+    # response["Requisito"] = response["Requisito"].str.replace("$$$", "")
+    # response["Requisito"] = response["Requisito"].str.replace("\n", "")
+    # response["Requisito"] = response["Requisito"].str.replace(";;", ";")
 
     if ((response["Requisito"].values[0])[-1]) != ";":
         response["Requisito"] = response["Requisito"] + ";"
+        
+    response["Item"] = response.index.astype(str).str.replace("QUESTION_", "")        
+    response["Item"] = response["Item"].astype("Int64")
+    response.drop("Requisito", axis=1, inplace=True)
 
     # response.index = response.index.astype(str) + ';'
     # response["Requisito"] = response.index
