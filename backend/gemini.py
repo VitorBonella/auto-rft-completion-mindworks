@@ -83,7 +83,8 @@ def search_requirement(rfp, base):
     for questao in rfp["Requisito"]:
         questoes += "$$$ " + questao + "\n"
 
-    arquivos = base["Local"].unique()[0:2]
+
+    arquivos = base["Local"].unique()
 
     saidas = []
     # total_arquivos = len(arquivos)
@@ -96,29 +97,25 @@ def search_requirement(rfp, base):
         model = create_model()
         chat_session = model.start_chat()
         output = chat_session.send_message([file, questoes])
-        print(output)
         output = output.text
         saidas.append(output)
-        print(output)
         output = format_output(output)
-        print(output)
         id1 = "_" + str(random.randint(0, 100000000))
         id2 = "_" + str(random.randint(0, 100000000))
         rfp = rfp.merge(output, on="Item", how="left", suffixes=(id1, id2))
-        time.sleep(5)
+        if (idx%2 ==0): 
+            print("Sleeping for 60 seconds - API key limit")
+            time.sleep(60)
 
-    print(rfp)        
     rfp = ajustar_cores(rfp)
     escondidos = []
     for col in rfp.columns:
         if col.startswith('Cor_'):
             escondidos.append(col)
     
-    print(rfp)
     style = rfp.style.apply(aplicar_cor, axis=None)
     style = style.hide(subset=escondidos, axis=1)
 
-    print(style)
     return rfp, style
 
 
@@ -138,12 +135,13 @@ def format_output(content):
 
     json_content = json.loads(res_txt)
     response = pd.DataFrame(json_content["answer"])
-    response = response.transpose()[["question", "answer", "color"]]
+    response = response.transpose()[["question", "answer", "color", "source"]]
     response = response.rename(
         columns={
             "question": "Requisito",
             "answer": ("Resposta" + "_" + json_content["model"]),
             "color": ("Cor" + "_" + json_content["model"]),
+            "source": ("Fonte" + "_" + json_content["model"])
         }
     )
 
