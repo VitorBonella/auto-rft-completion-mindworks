@@ -109,9 +109,7 @@ def search_requirement(rfp, base):
         progress_bar.progress((idx + 1) * qtd, str(idx+1) + "/" + str(total_arquivos))
         st.write(arq + "      ", "Completed")
 
-        if ((idx+1)%2 ==0): 
-            print("Sleeping for 90 seconds - API key limit")
-            time.sleep(90)
+        time.sleep(31)
 
     rfp = ajustar_cores(rfp)
     escondidos = []
