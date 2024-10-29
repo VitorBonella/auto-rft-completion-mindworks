@@ -29,5 +29,8 @@ if "links_falhos" in st.session_state and st.session_state.links_falhos is not N
     links_falhos = st.session_state.links_falhos
     st.write(links_falhos)
 
+if len(st.session_state.arquivos_falhos) > 0:
+    st.warning("Failed to process some files " + str(st.session_state.arquivos_falhos), icon="⚠️")
+
 if st.button("Return to main page"):
     voltar_para_pagina_principal()

@@ -63,23 +63,37 @@ def search_requirement(rfp, base):
     arquivos = base["Local"].unique()
 
     saidas = []
+    err_files = []
     total_arquivos = len(arquivos)
     qtd = 1 / arquivos.size
 
     progress_bar = st.progress(0, "0" + "/" + str(total_arquivos))
 
     for idx, arq in enumerate(arquivos):
-        file = upload_to_gemini(arq, mime_type="application/pdf")
+        file_name = arq.replace("downloads/","")
+        try:
+            file = upload_to_gemini(arq, mime_type="application/pdf")
+        except:
+            err_files.append(arq)
+            st.error("Error to upload "+ file_name)
+            st.error("Your API KEY is invalid")
+            return None,None
         wait_for_files_active([file])
         model = create_model()
         chat_session = model.start_chat()
         try:
             output = chat_session.send_message([file, questoes])
         except Exception as e:
-            st.write("ERROR")
-            st.write("Try to change your API KEY, or call the developers")
-            st.exception(e)
-            return None,None
+            #st.write("ERROR on "+ arq)
+            #st.write("Try to change your API KEY, or call the developers")
+            #st.exception(e)
+            #return None,None
+            progress_bar.progress((idx + 1) * qtd, str(idx+1) + "/" + str(total_arquivos))
+            err_files.append(file_name)
+            st.error("Error processing "+ file_name)
+            st.error(repr(e))
+            time.sleep(35)
+            continue
         output = output.text
         saidas.append(output)
         output = format_output(output)
@@ -88,9 +102,15 @@ def search_requirement(rfp, base):
         rfp = rfp.merge(output, on="Item", how="left", suffixes=(id1, id2))
         
         progress_bar.progress((idx + 1) * qtd, str(idx+1) + "/" + str(total_arquivos))
-        st.write(arq + "      ", "Completed")
+        st.write(file_name + "      ", "Completed")
 
-        time.sleep(31)
+        time.sleep(40)
+
+    if len(err_files) == len(arquivos):
+        st.write("[ERROR PROCESSING ALL FILES] Try to change your API KEY, or call the developers")
+        return None, None
+
+    st.session_state.arquivos_falhos = err_files
 
     rfp = ajustar_cores(rfp)
     escondidos = []
@@ -102,6 +122,7 @@ def search_requirement(rfp, base):
     style = style.hide(subset=escondidos, axis=1)
 
     return rfp, style
+
 
 def format_output(content):
 
@@ -156,6 +177,8 @@ def ajustar_cores(df):
                 def ajustar_cor(row):
                     resposta = row[col]
                     cor_atual = row[cor_col]
+                    if type(cor_atual) == str:
+                        cor_atual.lower()
 
                     # Condições para RED
                     if (
