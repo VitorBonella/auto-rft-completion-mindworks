@@ -91,13 +91,13 @@ if (
         st.switch_page("pages/error.py")
 
     new_info, new_info_colour = ge.search_requirement(rfp, base)
+    if new_info_colour != None:
+        dfFinal = new_info_colour
 
-    dfFinal = new_info_colour
+        if links_falhos:
+            st.session_state.links_falhos = links_falhos
+        # So colcoar o dfFinal como o que foi adquirido
+        st.session_state.dfFinal = dfFinal
+        st.switch_page("pages/result.py")
 
-    if links_falhos:
-        st.session_state.links_falhos = links_falhos
-    # So colcoar o dfFinal como o que foi adquirido
-    st.session_state.dfFinal = dfFinal
-    st.switch_page("pages/result.py")
-
-st.switch_page("pages/home.py")
+#st.switch_page("pages/home.py")
