@@ -20,7 +20,7 @@ if st.session_state.apiToast:
 if hu.get_api_key():
 
     with st.popover("Click here to configure your API Key"):
-            st.write(f"Your current API Key is: {os.getenv("API_KEY")}")
+            st.write(f'Your current API Key is: {os.getenv("API_KEY")}')
 
             api_key_input = st.text_input("Insert your new API Key", type="password")
             if st.button("Save changes"):
